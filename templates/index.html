@@ -1,12 +1,110 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intel-IA</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Intel-IA — Sinais</title>
+  <style>
+    :root { --bg:#0b0f17; --panel:#121826; --acc:#6ee7ff; --ok:#22c55e; --bad:#ef4444; --muted:#94a3b8; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell; background:var(--bg); color:#e5e7eb; }
+    .wrap { max-width: 980px; margin: 32px auto; padding: 0 16px; }
+    .card { background: var(--panel); border-radius: 18px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    h1 { margin: 0 0 4px; font-size: 28px; letter-spacing: .4px; }
+    .sub { color: var(--muted); margin-bottom: 16px; }
+    .row { display:flex; gap:12px; flex-wrap: wrap; align-items: center; }
+    input, select, button {
+      background: #0f172a; border: 1px solid #1f2937; color:#e5e7eb; padding: 10px 12px; border-radius: 12px; outline: none;
+    }
+    button { background: var(--acc); color:#001018; font-weight: 700; border: none; cursor: pointer; }
+    .grid { margin-top:16px; display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .tile { background:#0f172a; padding:14px; border-radius:14px; border:1px solid #1f2937; }
+    .lbl { color: var(--muted); font-size: 12px; }
+    .val { font-size: 20px; margin-top: 4px; }
+    .badge { display:inline-block; padding:6px 10px; border-radius:999px; font-weight:700; }
+    .BUY { background: rgba(34,197,94,.15); color: var(--ok); border: 1px solid rgba(34,197,94,.3); }
+    .SELL { background: rgba(239,68,68,.15); color: var(--bad); border: 1px solid rgba(239,68,68,.3); }
+    .HOLD { background: rgba(148,163,184,.15); color: var(--muted); border: 1px solid rgba(148,163,184,.3); }
+    ul { margin:8px 0 0 18px; color:#cbd5e1; }
+    footer { margin-top:14px; color:var(--muted); font-size:12px; }
+  </style>
 </head>
 <body>
-    <h1>🚀 Bem-vindo ao Intel-IA!</h1>
-    <p>Seu projeto Flask está rodando no Render com sucesso ✅</p>
+  <div class="wrap">
+    <div class="card">
+      <h1>Intel-IA <span style="color:var(--acc)">Sinais</span></h1>
+      <div class="sub">Filtros técnicos em tempo quase-real. Use com disciplina e gestão de risco.</div>
+
+      <div class="row">
+        <input id="symbol" placeholder="Ticker (ex: AAPL, PETR4.SA, BTCUSD)" value="AAPL" />
+        <select id="interval">
+          <option value="1min">1min</option>
+          <option value="5min">5min</option>
+          <option value="15min">15min</option>
+        </select>
+        <button id="btn">Analisar</button>
+        <div id="status" style="margin-left:auto;color:var(--muted);font-size:12px;"></div>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <div id="signal" class="badge HOLD">HOLD</div>
+        <div id="time" style="color:var(--muted);margin-left:8px;font-size:12px;"></div>
+      </div>
+
+      <div class="grid">
+        <div class="tile"><div class="lbl">Preço</div><div class="val" id="price">–</div></div>
+        <div class="tile"><div class="lbl">Score</div><div class="val" id="score">–</div></div>
+        <div class="tile"><div class="lbl">RSI(14)</div><div class="val" id="rsi">–</div></div>
+        <div class="tile"><div class="lbl">EMA 9</div><div class="val" id="ema9">–</div></div>
+        <div class="tile"><div class="lbl">EMA 21</div><div class="val" id="ema21">–</div></div>
+        <div class="tile"><div class="lbl">MACD / Signal</div><div class="val" id="macd">–</div></div>
+      </div>
+
+      <div style="margin-top:14px;">
+        <div class="lbl">Motivos do sinal</div>
+        <ul id="reasons"></ul>
+      </div>
+
+      <footer>Não é recomendação. Educação/estudo. Dados Alpha Vantage (limite 5 req/min na camada free).</footer>
+    </div>
+  </div>
+
+  <script>
+    const el = id => document.getElementById(id);
+
+    async function run() {
+      const symbol = el('symbol').value.trim() || 'AAPL';
+      const interval = el('interval').value;
+      el('status').textContent = 'Atualizando...';
+      try {
+        const r = await fetch(`/analyze?symbol=${encodeURIComponent(symbol)}&interval=${interval}`);
+        const data = await r.json();
+        if (data.error) throw new Error(data.error);
+
+        el('signal').textContent = data.label;
+        el('signal').className = `badge ${data.label}`;
+        el('score').textContent = data.score;
+        el('price').textContent = data.close;
+        el('rsi').textContent = data.rsi;
+        el('ema9').textContent = data.ema9;
+        el('ema21').textContent = data.ema21;
+        el('macd').textContent = `${data.macd} / ${data.macd_signal}`;
+        el('time').textContent = `Último candle: ${new Date(data.time).toLocaleString()}`;
+
+        const ul = el('reasons'); ul.innerHTML = '';
+        data.reasons.forEach(t => {
+          const li = document.createElement('li'); li.textContent = t; ul.appendChild(li);
+        });
+        el('status').textContent = 'OK';
+      } catch (err) {
+        el('status').textContent = err.message || 'Erro';
+      }
+    }
+
+    el('btn').addEventListener('click', run);
+    // Atualização automática a cada 15s
+    setInterval(run, 15000);
+    run();
+  </script>
 </body>
 </html>
