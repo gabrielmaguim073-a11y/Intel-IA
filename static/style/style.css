@@ -1,0 +1,69 @@
+/* Estilo geral da página */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* 🔥 Aqui entra sua imagem de fundo */
+    background-image: url("../img/fundo.jpg");
+    background-size: cover;      /* Faz a imagem cobrir a tela */
+    background-position: center; /* Centraliza a imagem */
+    background-repeat: no-repeat;/* Não repete a imagem */
+    color: white; /* Deixa o texto branco para aparecer melhor */
+}
+
+/* Caixa principal do chat */
+.container {
+    background: rgba(0, 0, 0, 0.6); /* Fundo semi-transparente */
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.5);
+}
+
+/* Mensagens */
+.message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.message.user {
+    background: rgba(76, 175, 80, 0.8); /* Verde */
+    text-align: right;
+}
+
+.message.bot {
+    background: rgba(33, 150, 243, 0.8); /* Azul */
+    text-align: left;
+}
+
+/* Campo de input */
+input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+
+/* Botão enviar */
+button {
+    padding: 10px 15px;
+    margin-left: 5px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #45a049;
+}
