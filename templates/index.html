@@ -1,94 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Intel-IA</title>
-  <style>
-    body { font-family: system-ui, Arial, sans-serif; margin: 0; background:#0b0f14; color:#e6ebf2; }
-    .wrap { max-width: 900px; margin: 0 auto; padding: 16px; }
-    h1 { font-size: 22px; margin: 12px 0 8px; }
-    .chat { background:#121823; border:1px solid #1f2a3a; border-radius:14px; padding:12px; min-height:50vh; }
-    .msg { padding:10px 12px; border-radius:12px; margin:10px 0; max-width:85%; line-height:1.4 }
-    .u { background:#1b2a4a; align-self:flex-end; margin-left:auto; }
-    .b { background:#17212e; }
-    .row { display:flex; gap:8px; margin-top:12px; }
-    input, button, textarea {
-      border-radius:12px; border:1px solid #243144; background:#0f1622; color:#e6ebf2; padding:12px;
-    }
-    textarea { flex:1; resize:vertical; min-height:60px; }
-    button { cursor:pointer; }
-    .foot { font-size:12px; opacity:.7; margin-top:8px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha IA</title>
+    <!-- Linka o CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="wrap">
-    <h1>Intel-IA (sua IA pessoal)</h1>
-    <div id="chat" class="chat" style="display:flex; flex-direction:column;"></div>
-
-    <div class="row">
-      <textarea id="pergunta" placeholder="Escreva sua pergunta..."></textarea>
-      <button id="enviar">Enviar</button>
+    <div class="chat-container">
+        <h2>🤖 Minha Inteligência Artificial</h2>
+        <div id="chat-box" style="height: 300px; overflow-y: auto; background: #0d1117; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+            <p><b>IA:</b> Olá! Estou online e pronta para ajudar 🚀</p>
+        </div>
+        <input type="text" id="user-input" placeholder="Digite sua mensagem..." style="width: 80%; padding: 8px; border-radius: 8px; border: none;">
+        <button onclick="sendMessage()" style="padding: 8px 12px; border-radius: 8px; border: none; background: #00c896; color: white; cursor: pointer;">Enviar</button>
     </div>
-    <div class="foot">Dica: a primeira vez será pedido um “token” (senha) para usar a IA.</div>
-  </div>
 
-  <script>
-    const chat = document.getElementById('chat');
-    const perguntaEl = document.getElementById('pergunta');
-    const enviarBtn = document.getElementById('enviar');
+    <script>
+        async function sendMessage() {
+            let input = document.getElementById("user-input");
+            let message = input.value.trim();
+            if (message === "") return;
 
-    // Pede o token uma vez e guarda no dispositivo
-    let TOKEN = localStorage.getItem('intel_ia_token');
-    if (!TOKEN) {
-      TOKEN = prompt("Digite sua senha de acesso (token):");
-      if (TOKEN) localStorage.setItem('intel_ia_token', TOKEN);
-    }
+            let chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<p><b>Você:</b> ${message}</p>`;
+            input.value = "";
 
-    function addMsg(text, who) {
-      const div = document.createElement('div');
-      div.className = 'msg ' + (who === 'u' ? 'u' : 'b');
-      div.textContent = text;
-      chat.appendChild(div);
-      chat.scrollTop = chat.scrollHeight;
-    }
+            let response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
+            });
 
-    async function perguntar() {
-      const pergunta = perguntaEl.value.trim();
-      if (!pergunta) return;
-      addMsg(pergunta, 'u');
-      perguntaEl.value = '';
-
-      try {
-        const res = await fetch('/perguntar', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(TOKEN ? {'X-Token': TOKEN} : {})
-          },
-          body: JSON.stringify({ pergunta })
-        });
-
-        const data = await res.json();
-        if (!res.ok) {
-          addMsg('Erro: ' + (data.erro || 'Falha'), 'b');
-          return;
+            let data = await response.json();
+            chatBox.innerHTML += `<p><b>IA:</b> ${data.reply}</p>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
-        addMsg(data.resposta, 'b');
-      } catch (e) {
-        addMsg('Erro de rede: ' + e.message, 'b');
-      }
-    }
-
-    enviarBtn.addEventListener('click', perguntar);
-    perguntaEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        perguntar();
-      }
-    });
-
-    addMsg('Pronto! Faça sua pergunta.', 'b');
-  </script>
+    </script>
 </body>
 </html>
