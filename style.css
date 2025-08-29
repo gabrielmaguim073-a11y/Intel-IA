@@ -1,0 +1,19 @@
+body {
+    background: url("https://img.freepik.com/fotos-gratis/inteligencia-artificial-mao-humana-mao-robotica_123827-25503.jpg") no-repeat center center fixed;
+    background-size: cover;
+    color: #f0f6fc;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.chat-container {
+    width: 450px;
+    background: rgba(22, 27, 34, 0.85); /* fundo com transparência */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 15px rgba(0, 255, 180, 0.3);
+}
