@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha IA</title>
-    <!-- Linka o CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Intel IA</title>
+    <!-- Importando o CSS do static -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
 </head>
 <body>
-    <div class="chat-container">
-        <h2>🤖 Minha Inteligência Artificial</h2>
-        <div id="chat-box" style="height: 300px; overflow-y: auto; background: #0d1117; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
-            <p><b>IA:</b> Olá! Estou online e pronta para ajudar 🚀</p>
+    <div class="container">
+        <h1>🤖 Intel IA</h1>
+        <div id="chat-box"></div>
+
+        <!-- Caixa de input -->
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Digite sua mensagem...">
+            <button onclick="sendMessage()">Enviar</button>
         </div>
-        <input type="text" id="user-input" placeholder="Digite sua mensagem..." style="width: 80%; padding: 8px; border-radius: 8px; border: none;">
-        <button onclick="sendMessage()" style="padding: 8px 12px; border-radius: 8px; border: none; background: #00c896; color: white; cursor: pointer;">Enviar</button>
     </div>
 
     <script>
@@ -23,10 +25,17 @@
             let message = input.value.trim();
             if (message === "") return;
 
+            // Mostra mensagem do usuário
             let chatBox = document.getElementById("chat-box");
-            chatBox.innerHTML += `<p><b>Você:</b> ${message}</p>`;
+            let userMsg = document.createElement("div");
+            userMsg.className = "message user";
+            userMsg.textContent = message;
+            chatBox.appendChild(userMsg);
+
+            // Limpa input
             input.value = "";
 
+            // Faz requisição para o backend Flask
             let response = await fetch("/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -34,7 +43,14 @@
             });
 
             let data = await response.json();
-            chatBox.innerHTML += `<p><b>IA:</b> ${data.reply}</p>`;
+
+            // Mostra resposta da IA
+            let botMsg = document.createElement("div");
+            botMsg.className = "message bot";
+            botMsg.textContent = data.reply;
+            chatBox.appendChild(botMsg);
+
+            // Scroll automático
             chatBox.scrollTop = chatBox.scrollHeight;
         }
     </script>
