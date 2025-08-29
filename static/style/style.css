@@ -1,12 +1,5 @@
 /* Arquivo: static/style/style.css */
 
-/* Reset básico */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     background-image: url("../images/fundo.jpg");
     background-size: cover;
@@ -25,7 +18,7 @@ body {
 h1 {
     font-size: 2.5rem;
     margin-bottom: 20px;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
 p {
