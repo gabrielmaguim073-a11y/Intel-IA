@@ -3,56 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intel IA</title>
-    <!-- Importando o CSS do static -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <title>Intel-IA</title>
+    <!-- Link para o CSS -->
+    <link rel="stylesheet" href="static/style/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>🤖 Intel IA</h1>
-        <div id="chat-box"></div>
-
-        <!-- Caixa de input -->
-        <div class="input-area">
-            <input type="text" id="user-input" placeholder="Digite sua mensagem...">
-            <button onclick="sendMessage()">Enviar</button>
-        </div>
+        <h1>Bem-vindo ao Intel-IA 🚀</h1>
+        <p>Sua página inicial já está funcionando com imagem de fundo e estilo.</p>
     </div>
-
-    <script>
-        async function sendMessage() {
-            let input = document.getElementById("user-input");
-            let message = input.value.trim();
-            if (message === "") return;
-
-            // Mostra mensagem do usuário
-            let chatBox = document.getElementById("chat-box");
-            let userMsg = document.createElement("div");
-            userMsg.className = "message user";
-            userMsg.textContent = message;
-            chatBox.appendChild(userMsg);
-
-            // Limpa input
-            input.value = "";
-
-            // Faz requisição para o backend Flask
-            let response = await fetch("/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: message })
-            });
-
-            let data = await response.json();
-
-            // Mostra resposta da IA
-            let botMsg = document.createElement("div");
-            botMsg.className = "message bot";
-            botMsg.textContent = data.reply;
-            chatBox.appendChild(botMsg);
-
-            // Scroll automático
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-    </script>
 </body>
 </html>
