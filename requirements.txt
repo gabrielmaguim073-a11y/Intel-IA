@@ -1,7 +1,1 @@
-Flask
-gunicorn
-requests
-pandas
-numpy
-ta
-python-dotenv
+flask
