@@ -4,3 +4,4 @@ import os
 API_KEY = os.getenv("API_KEY")
 if not API_KEY:
     raise RuntimeError("API_KEY não está definida no ambiente")
+adiciona leitura da API_KEY do ambiente
