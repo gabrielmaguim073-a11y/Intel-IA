@@ -1,36 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Intel IA • Análise em Tempo Real</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intel IA</title>
+    <!-- Link para o CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
 </head>
 <body>
-  <header>
-    <h1>Intel IA • {{ symbol }} ({{ interval }})</h1>
-  </header>
-
-  <main>
-    <p>Esta é a sua página de análise. Clique no botão para gerar um parecer técnico da IA com base nos últimos candles e indicadores (EMA9, EMA21, RSI14).</p>
-
-    <div class="panel">
-      <label for="nota">Observação opcional para a IA:</label>
-      <input id="nota" type="text" placeholder="ex: foco em tendência de curto prazo" />
-      <button id="analisar">Analisar agora</button>
+    <div class="container">
+        <h1>Bem-vindo à Intel IA</h1>
+        <p>Sua inteligência artificial para análises do mercado financeiro.</p>
+        <button onclick="alert('Função de teste funcionando!')">Clique aqui</button>
     </div>
-
-    <div class="panel">
-      <h3>Último Snapshot</h3>
-      <div id="snapshot">Carregando dados...</div>
-    </div>
-
-    <div class="panel">
-      <h3>Parecer da IA</h3>
-      <pre id="resultado">—</pre>
-    </div>
-  </main>
-
-  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
