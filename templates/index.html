@@ -4,14 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intel IA</title>
-    <!-- Importando o CSS -->
-    <link rel="stylesheet" href="static/style/style.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
 </head>
 <body>
-    <h1>Bem-vindo à Intel IA 🚀</h1>
-    <p>Essa é a sua aplicação inicial conectada com HTML, CSS e JavaScript.</p>
+    <header>
+        <h1>Bem-vindo à Intel IA 🚀</h1>
+    </header>
 
-    <!-- Importando o JS -->
-    <script src="static/js/app.js"></script>
+    <main>
+        <p>Este é o início do seu projeto com Flask, CSS e JS conectados!</p>
+        <button id="acao">Clique aqui</button>
+    </main>
+
+    <!-- Fundo -->
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/fundo.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+
+    <!-- JS -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
