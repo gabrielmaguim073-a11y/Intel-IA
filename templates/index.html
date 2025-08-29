@@ -1,110 +1,94 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Intel-IA — Sinais</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Intel-IA</title>
   <style>
-    :root { --bg:#0b0f17; --panel:#121826; --acc:#6ee7ff; --ok:#22c55e; --bad:#ef4444; --muted:#94a3b8; }
-    * { box-sizing: border-box; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell; background:var(--bg); color:#e5e7eb; }
-    .wrap { max-width: 980px; margin: 32px auto; padding: 0 16px; }
-    .card { background: var(--panel); border-radius: 18px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
-    h1 { margin: 0 0 4px; font-size: 28px; letter-spacing: .4px; }
-    .sub { color: var(--muted); margin-bottom: 16px; }
-    .row { display:flex; gap:12px; flex-wrap: wrap; align-items: center; }
-    input, select, button {
-      background: #0f172a; border: 1px solid #1f2937; color:#e5e7eb; padding: 10px 12px; border-radius: 12px; outline: none;
+    body { font-family: system-ui, Arial, sans-serif; margin: 0; background:#0b0f14; color:#e6ebf2; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 16px; }
+    h1 { font-size: 22px; margin: 12px 0 8px; }
+    .chat { background:#121823; border:1px solid #1f2a3a; border-radius:14px; padding:12px; min-height:50vh; }
+    .msg { padding:10px 12px; border-radius:12px; margin:10px 0; max-width:85%; line-height:1.4 }
+    .u { background:#1b2a4a; align-self:flex-end; margin-left:auto; }
+    .b { background:#17212e; }
+    .row { display:flex; gap:8px; margin-top:12px; }
+    input, button, textarea {
+      border-radius:12px; border:1px solid #243144; background:#0f1622; color:#e6ebf2; padding:12px;
     }
-    button { background: var(--acc); color:#001018; font-weight: 700; border: none; cursor: pointer; }
-    .grid { margin-top:16px; display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .tile { background:#0f172a; padding:14px; border-radius:14px; border:1px solid #1f2937; }
-    .lbl { color: var(--muted); font-size: 12px; }
-    .val { font-size: 20px; margin-top: 4px; }
-    .badge { display:inline-block; padding:6px 10px; border-radius:999px; font-weight:700; }
-    .BUY { background: rgba(34,197,94,.15); color: var(--ok); border: 1px solid rgba(34,197,94,.3); }
-    .SELL { background: rgba(239,68,68,.15); color: var(--bad); border: 1px solid rgba(239,68,68,.3); }
-    .HOLD { background: rgba(148,163,184,.15); color: var(--muted); border: 1px solid rgba(148,163,184,.3); }
-    ul { margin:8px 0 0 18px; color:#cbd5e1; }
-    footer { margin-top:14px; color:var(--muted); font-size:12px; }
+    textarea { flex:1; resize:vertical; min-height:60px; }
+    button { cursor:pointer; }
+    .foot { font-size:12px; opacity:.7; margin-top:8px; }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
-      <h1>Intel-IA <span style="color:var(--acc)">Sinais</span></h1>
-      <div class="sub">Filtros técnicos em tempo quase-real. Use com disciplina e gestão de risco.</div>
+    <h1>Intel-IA (sua IA pessoal)</h1>
+    <div id="chat" class="chat" style="display:flex; flex-direction:column;"></div>
 
-      <div class="row">
-        <input id="symbol" placeholder="Ticker (ex: AAPL, PETR4.SA, BTCUSD)" value="AAPL" />
-        <select id="interval">
-          <option value="1min">1min</option>
-          <option value="5min">5min</option>
-          <option value="15min">15min</option>
-        </select>
-        <button id="btn">Analisar</button>
-        <div id="status" style="margin-left:auto;color:var(--muted);font-size:12px;"></div>
-      </div>
-
-      <div class="row" style="margin-top:12px;">
-        <div id="signal" class="badge HOLD">HOLD</div>
-        <div id="time" style="color:var(--muted);margin-left:8px;font-size:12px;"></div>
-      </div>
-
-      <div class="grid">
-        <div class="tile"><div class="lbl">Preço</div><div class="val" id="price">–</div></div>
-        <div class="tile"><div class="lbl">Score</div><div class="val" id="score">–</div></div>
-        <div class="tile"><div class="lbl">RSI(14)</div><div class="val" id="rsi">–</div></div>
-        <div class="tile"><div class="lbl">EMA 9</div><div class="val" id="ema9">–</div></div>
-        <div class="tile"><div class="lbl">EMA 21</div><div class="val" id="ema21">–</div></div>
-        <div class="tile"><div class="lbl">MACD / Signal</div><div class="val" id="macd">–</div></div>
-      </div>
-
-      <div style="margin-top:14px;">
-        <div class="lbl">Motivos do sinal</div>
-        <ul id="reasons"></ul>
-      </div>
-
-      <footer>Não é recomendação. Educação/estudo. Dados Alpha Vantage (limite 5 req/min na camada free).</footer>
+    <div class="row">
+      <textarea id="pergunta" placeholder="Escreva sua pergunta..."></textarea>
+      <button id="enviar">Enviar</button>
     </div>
+    <div class="foot">Dica: a primeira vez será pedido um “token” (senha) para usar a IA.</div>
   </div>
 
   <script>
-    const el = id => document.getElementById(id);
+    const chat = document.getElementById('chat');
+    const perguntaEl = document.getElementById('pergunta');
+    const enviarBtn = document.getElementById('enviar');
 
-    async function run() {
-      const symbol = el('symbol').value.trim() || 'AAPL';
-      const interval = el('interval').value;
-      el('status').textContent = 'Atualizando...';
+    // Pede o token uma vez e guarda no dispositivo
+    let TOKEN = localStorage.getItem('intel_ia_token');
+    if (!TOKEN) {
+      TOKEN = prompt("Digite sua senha de acesso (token):");
+      if (TOKEN) localStorage.setItem('intel_ia_token', TOKEN);
+    }
+
+    function addMsg(text, who) {
+      const div = document.createElement('div');
+      div.className = 'msg ' + (who === 'u' ? 'u' : 'b');
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function perguntar() {
+      const pergunta = perguntaEl.value.trim();
+      if (!pergunta) return;
+      addMsg(pergunta, 'u');
+      perguntaEl.value = '';
+
       try {
-        const r = await fetch(`/analyze?symbol=${encodeURIComponent(symbol)}&interval=${interval}`);
-        const data = await r.json();
-        if (data.error) throw new Error(data.error);
-
-        el('signal').textContent = data.label;
-        el('signal').className = `badge ${data.label}`;
-        el('score').textContent = data.score;
-        el('price').textContent = data.close;
-        el('rsi').textContent = data.rsi;
-        el('ema9').textContent = data.ema9;
-        el('ema21').textContent = data.ema21;
-        el('macd').textContent = `${data.macd} / ${data.macd_signal}`;
-        el('time').textContent = `Último candle: ${new Date(data.time).toLocaleString()}`;
-
-        const ul = el('reasons'); ul.innerHTML = '';
-        data.reasons.forEach(t => {
-          const li = document.createElement('li'); li.textContent = t; ul.appendChild(li);
+        const res = await fetch('/perguntar', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(TOKEN ? {'X-Token': TOKEN} : {})
+          },
+          body: JSON.stringify({ pergunta })
         });
-        el('status').textContent = 'OK';
-      } catch (err) {
-        el('status').textContent = err.message || 'Erro';
+
+        const data = await res.json();
+        if (!res.ok) {
+          addMsg('Erro: ' + (data.erro || 'Falha'), 'b');
+          return;
+        }
+        addMsg(data.resposta, 'b');
+      } catch (e) {
+        addMsg('Erro de rede: ' + e.message, 'b');
       }
     }
 
-    el('btn').addEventListener('click', run);
-    // Atualização automática a cada 15s
-    setInterval(run, 15000);
-    run();
+    enviarBtn.addEventListener('click', perguntar);
+    perguntaEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        perguntar();
+      }
+    });
+
+    addMsg('Pronto! Faça sua pergunta.', 'b');
   </script>
 </body>
 </html>
