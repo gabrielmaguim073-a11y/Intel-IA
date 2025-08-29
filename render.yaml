@@ -1,2 +1,8 @@
-flask
-gunicorn
+services:
+  - type: web
+    name: NOME-DO-SEU-SERVIÇO
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    autoDeploy: true
